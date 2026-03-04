@@ -10,7 +10,7 @@
     "prisma:generate": "prisma generate",
     "db:push": "prisma db push",
     "prisma:seed": "prisma db seed",
-    "test": "cross-env DATABASE_URL=file:./test.db prisma db push --skip-generate && cross-env DATABASE_URL=file:./test.db vitest run"
+    "test": "node scripts/test-with-test-db.js"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

@@ -1,7 +1,7 @@
 # 项目使用说明
 
 ## 1. 项目简介
-本项目是一个基础投注系统，基于 Next.js + Node.js API Route Handlers + Prisma + SQLite 实现。
+本项目是一个基础投注系统，基于 Next.js + Node.js API Route Handlers + Prisma + PostgreSQL 实现。
 
 核心能力：
 - 用户余额展示
@@ -18,6 +18,8 @@
 
 ```bash
 npm install
+cp .env.example .env
+# 配置 .env 里的 DATABASE_URL（PostgreSQL）
 npm run db:push
 npm run prisma:seed
 npm run dev
@@ -47,18 +49,19 @@ npx prisma studio
 ```
 默认访问：`http://localhost:5555`
 
-### 5.2 SQLite 命令行（可选）
+### 5.2 PostgreSQL 命令行（可选）
 ```bash
-sqlite3 prisma/dev.db
-.tables
+psql "$DATABASE_URL"
+\dt
 SELECT * FROM users;
 SELECT * FROM ledger_entries;
 SELECT * FROM bets;
-.quit
+\q
 ```
 
 ## 6. 测试与构建
 ```bash
+export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mini_project_test?schema=public"
 npm test
 npm run build
 ```
