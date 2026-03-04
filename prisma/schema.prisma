@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum LedgerType {
+  DEPOSIT
+  BET_DEBIT
+  BET_CREDIT
+}
+
+enum BetStatus {
+  PLACED
+  SETTLED
+}
+
+enum BetResult {
+  WIN
+  LOSE
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  displayName  String        @map("display_name")
+  ledgerEntries LedgerEntry[]
+  bets         Bet[]
+
+  @@map("users")
+}
+
+model LedgerEntry {
+  id        String     @id @default(uuid())
+  userId    String     @map("user_id")
+  type      LedgerType
+  amount    Int
+  createdAt DateTime   @default(now()) @map("created_at")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@map("ledger_entries")
+}
+
+model Bet {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  amount       Int
+  status       BetStatus @default(PLACED)
+  result       BetResult?
+  payoutAmount Int       @default(0) @map("payout_amount")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  user         User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@map("bets")
+}
